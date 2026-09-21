@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rational Square Roots Level 3</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#eef4ff;
+    text-align:center;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+input{
+    font-size:20px;
+    padding:10px;
+    width:150px;
+    text-align:center;
+}
+
+#gameArea{
+    display:none;
+}
+
+#question{
+    font-size:32px;
+    font-weight:bold;
+    margin:20px;
+}
+
+#feedback{
+    margin-top:20px;
+    padding:15px;
+    background:#f5f5f5;
+    border-radius:10px;
+    min-height:90px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎯 Rational Square Roots Level 3</h1>
+
+<p>Estimate the square root to the nearest hundredth.</p>
+
+<div id="menu">
+    <button onclick="startGame()">Start Game</button>
+</div>
+
+<div id="gameArea">
+
+    <h3>
+        Question <span id="qNum">1</span>/10
+    </h3>
+
+    <h3>
+        Score: <span id="score">0</span>
+    </h3>
+
+    <div id="question"></div>
+
+    <input id="answer" type="number" step="0.01">
+
+    <br><br>
+
+    <button onclick="checkAnswer()">Submit</button>
+
+    <button onclick="showSolution()">Solution</button>
+
+    <button onclick="nextQuestion()">Next Question</button>
+
+    <div id="feedback"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let score = 0;
+let qNum = 1;
+
+let currentNumber;
+let currentRoot;
+
+function startGame(){
+
+    score = 0;
+    qNum = 1;
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("gameArea").style.display = "block";
+
+    generateQuestion();
+}
+
+function generateQuestion(){
+
+    do{
+
+        currentNumber =
+        Math.random() * 9.99 + 0.01;
+
+        currentNumber =
+        Number(currentNumber.toFixed(2));
+
+        currentRoot =
+        Math.sqrt(currentNumber);
+
+    } while(Number.isInteger(currentRoot));
+
+    document.getElementById("question").innerHTML =
+    "Estimate √" + currentNumber;
+
+    document.getElementById("answer").value = "";
+
+    document.getElementById("feedback").innerHTML = "";
+
+    document.getElementById("score").innerHTML = score;
+    document.getElementById("qNum").innerHTML = qNum;
+}
+
+function checkAnswer(){
+
+    let student =
+    parseFloat(document.getElementById("answer").value);
+
+    if(isNaN(student)){
+
+        document.getElementById("feedback").innerHTML =
+        "Please enter an estimate.";
+
+        return;
+    }
+
+    if(Math.abs(student - currentRoot) <= 0.01){
+
+        score++;
+
+        document.getElementById("feedback").innerHTML =
+        "✅ Correct Estimate";
+
+    } else {
+
+        document.getElementById("feedback").innerHTML =
+        "❌ Actual Value ≈ " +
+        currentRoot.toFixed(2);
+    }
+
+    document.getElementById("score").innerHTML = score;
+}
+
+function showSolution(){
+
+    let lower =
+    Math.floor(currentRoot * 10) / 10;
+
+    let upper =
+    (Math.floor(currentRoot * 10) + 1) / 10;
+
+    let lowerSquare =
+    (lower * lower).toFixed(2);
+
+    let upperSquare =
+    (upper * upper).toFixed(2);
+
+    document.getElementById("feedback").innerHTML =
+
+    "<h3>Solution</h3>" +
+
+    "<p><b>Step 1:</b> Find nearby perfect squares.</p>" +
+
+    "<p>" +
+    lowerSquare +
+    " < " +
+    currentNumber +
+    " < " +
+    upperSquare +
+    "</p>" +
+
+    "<p><b>Step 2:</b></p>" +
+
+    "<p>" +
+    lower +
+    " < √" +
+    currentNumber +
+    " < " +
+    upper +
+    "</p>" +
+
+    "<p><b>Step 3:</b></p>" +
+
+    "<p>√" +
+    currentNumber +
+    " ≈ " +
+    currentRoot.toFixed(2) +
+    "</p>";
+}
+
+function nextQuestion(){
+
+    qNum++;
+
+    if(qNum > 10){
+
+        let percent =
+        Math.round(score / 10 * 100);
+
+        document.getElementById("gameArea").innerHTML =
+
+        "<h2>🎉 Game Over</h2>" +
+
+        "<h2>Final Score: " +
+        score +
+        "/10</h2>" +
+
+        "<h2>" +
+        percent +
+        "%</h2>";
+
+        return;
+    }
+
+    generateQuestion();
+}
+
+</script>
+
+</body>
+</html>
